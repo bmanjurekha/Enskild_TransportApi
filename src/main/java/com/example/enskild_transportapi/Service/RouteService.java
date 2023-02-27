@@ -26,4 +26,15 @@ public class RouteService {
     public Route save(Route route) {
         return routeRepository.save(route);
     }
+
+    public Route get(long id) {
+        return routeRepository.findById(id).get();
+    }
+
+    public void delete(long id) {
+        routeRepository.deleteById(id);
+    }
+    public List<Route> getAllRoute() {
+        return routeRepository.findAll();
+    }
 }

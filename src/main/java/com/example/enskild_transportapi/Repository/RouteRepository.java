@@ -14,4 +14,6 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
     //SELECT * FROM route where origin like '%%' and destination like '%%';
     List<Route> findAllRoutesByOriginContainsAndDestinationContains(String Origin,String Destination);
 
+
+
 }

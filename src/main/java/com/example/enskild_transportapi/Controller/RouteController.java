@@ -26,7 +26,7 @@ public class RouteController {
     @Autowired
     private RouteService routeService;
     @GetMapping("getroute/{origin}/{destination}/{transportmode}")
-    public ResponseEntity<Object> getRoute(@PathVariable String origin, @PathVariable String destination, @PathVariable String transportmode) throws IOException {
+    public ResponseEntity<List<Route>> getRoute(@PathVariable String origin, @PathVariable String destination, @PathVariable String transportmode) throws IOException {
         double destLat = 0;
         double destLng = 0;
         String weather;
@@ -157,7 +157,35 @@ public class RouteController {
         return  null;
     }
 
+    @GetMapping("getAllFavouredRoutes")
+    public ResponseEntity<List<Route>>getAllFavouredRoutes()
+    {
+        List<Route> routes = routeService.FavouredRoutes(true);
+        return ResponseEntity.status(201).body(routes);
+    }
+    @PostMapping("isFavouredroute/{id}")
+    public ResponseEntity<Route> isFavouredroute(@PathVariable long id) {
+       Route route = routeService.get(id);
+       if(route!=null)
+       {
+           route.setIsFavoured(true);
+           routeService.save(route);
+           return ResponseEntity.ok(routeService.get(id));
+       }
+       else
+           return ResponseEntity
+                   .status(204)
+                   .header("x-information", "Route did not exist")
+                   .body(new Route());
+    }
 
+    @DeleteMapping("deleteFavouredroute/{id}")
+    public ResponseEntity<List<Route>> deleteFavouredroute(@PathVariable long id) {
+
+        routeService.delete(id);
+        List<Route> routes = routeService.getAllRoute();
+        return ResponseEntity.status(201).body(routes);
+    }
 }
 
 
