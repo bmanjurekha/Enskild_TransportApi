@@ -157,10 +157,10 @@ public class RouteController {
         return  null;
     }
 
-    @GetMapping("getAllFavouredRoutes")
-    public ResponseEntity<List<Route>>getAllFavouredRoutes()
+    @GetMapping("getFavouredRoutes/{transportmode}")
+    public ResponseEntity<List<Route>>getFavouredRoutes(@PathVariable String transportmode)
     {
-        List<Route> routes = routeService.FavouredRoutes(true);
+        List<Route> routes = routeService.FavouredRoutesByTransportmode(true,transportmode);
         return ResponseEntity.status(201).body(routes);
     }
     @PostMapping("isFavouredroute/{id}")
@@ -180,11 +180,20 @@ public class RouteController {
     }
 
     @DeleteMapping("deleteFavouredroute/{id}")
-    public ResponseEntity<List<Route>> deleteFavouredroute(@PathVariable long id) {
+    public ResponseEntity<Route> deleteFavouredroute(@PathVariable long id) {
 
-        routeService.delete(id);
-        List<Route> routes = routeService.getAllRoute();
-        return ResponseEntity.status(201).body(routes);
+        Route route = routeService.get(id);
+        if(route!=null)
+        {
+            route.setIsFavoured(false);
+            routeService.save(route);
+            return ResponseEntity.ok(routeService.get(id));
+        }
+        else
+            return ResponseEntity
+                    .status(204)
+                    .header("x-information", "Route did not exist")
+                    .body(new Route());
     }
 }
 

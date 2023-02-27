@@ -19,6 +19,11 @@ public class RouteService {
     public List<Route> FavouredRoutes(Boolean isFavoured){
         return  routeRepository.findRouteByIsFavoured(isFavoured);
     }
+
+    public List<Route> FavouredRoutesByTransportmode(Boolean isFavoured,String transport_mode)
+    {
+        return routeRepository.findRouteByIsFavouredAndTransportMode(isFavoured,transport_mode);
+    }
     public List<Route> RoutesOriginDest(String origin,String destination)
     {
         return routeRepository.findAllRoutesByOriginContainsAndDestinationContains(origin,destination);
